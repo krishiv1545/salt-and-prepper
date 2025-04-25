@@ -7,3 +7,5 @@ instance/
 add_admin.py
 drop_table.py
 temp
+venv/*
+venv
