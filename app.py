@@ -266,6 +266,10 @@ def edit_subject(subject_id):
 
 @app.route('/delete-quiz/<int:quiz_id>', methods=['GET', 'POST'])
 def delete_quiz(quiz_id):
+
+    if session['role'] == 'admin':
+        return redirect(url_for('admin_dashboard'))
+
     quiz = Quizzes.query.get(quiz_id)
     db.session.delete(quiz)
     db.session.commit()
@@ -274,6 +278,10 @@ def delete_quiz(quiz_id):
 
 @app.route('/delete-subject/<int:subject_id>', methods=['GET', 'POST'])
 def delete_subject(subject_id):
+
+    if session['role'] == 'admin':
+        return redirect(url_for('admin_dashboard'))
+
     subject = Subjects.query.get(subject_id)
     quizzes = Quizzes.query.filter_by(subject_id=subject_id).all()
 
@@ -457,6 +465,10 @@ def submit_quiz():
 
 @app.route('/delete-question/<int:question_id>', methods=['GET', 'POST'])
 def delete_question(question_id):
+
+    if session['role'] == 'admin':
+        return redirect(url_for('admin_dashboard'))
+
     question = Questions.query.get(question_id)
     db.session.delete(question)
     db.session.commit()
