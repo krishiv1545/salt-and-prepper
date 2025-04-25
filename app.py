@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from models.models import db, User, Subjects, Quizzes, Questions, Scores
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, UTC
 import os
 import json
 from sqlalchemy import func
@@ -23,6 +23,41 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+    # Get superadmin credentials from environment
+    superadmin_email = os.getenv("SUPERADMIN_EMAIL")
+    superadmin_username = os.getenv("SUPERADMIN_USERNAME")
+    superadmin_password = os.getenv("SUPERADMIN_PASSWORD")
+
+    # Check if superadmin exists
+    if not User.query.filter_by(email=superadmin_email).first():
+        superadmin = User(
+            email=superadmin_email,
+            username=superadmin_username,
+            password=generate_password_hash(superadmin_password),
+            full_name="Super Admin",
+            qualification="Admin Access",
+            dob=datetime(1990, 1, 1),
+            role='superadmin',
+            datetime=datetime.now(UTC)
+        )
+        db.session.add(superadmin)
+
+    # Check if test admin exists
+    if not User.query.filter_by(email="testadmin@gmail.com").first():
+        test_admin = User(
+            email="testadmin@gmail.com",
+            username="testadmin",
+            password=generate_password_hash("testadmin"),
+            full_name="Test Admin",
+            qualification="Admin Access",
+            dob=datetime(1995, 1, 1),
+            role='admin',
+            datetime=datetime.now(UTC)
+        )
+        db.session.add(test_admin)
+
+    db.session.commit()
 
 
 @app.route('/')
