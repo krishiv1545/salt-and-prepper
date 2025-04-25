@@ -629,7 +629,7 @@ def add_admin():
         return redirect(url_for('dashboard'))
     elif session['role'] == 'admin':
         flash('Sign in as a superadmin.', 'error')
-        return redirect(url_for('admin-dashboard'))
+        return redirect(url_for('admin_dashboard'))
     else:
         if request.method == 'POST':
             email = request.form['email']
